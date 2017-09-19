@@ -1,21 +1,7 @@
 module Order where
 
---import Types
-type Portfolio = (Cash, Holdings)
+import Types
 
-type Holding  = (Stock, Quantity)
-type Holdings = [Holding]
-
-type Cash = Double
-
-type Price = Double
-type Quantity = Integer
-
-type Stock = String
-type StockHistory = (Stock, [Price])
-
--- Positive quantity indicates long position.
-data Order = Order Stock Quantity deriving (Show)
 
 -- Change this implementation to your own non-trivial trading strategy.
 -- Do not modify the type signature of the function.
@@ -28,7 +14,7 @@ data Order = Order Stock Quantity deriving (Show)
 -- >>> aboveAverage [("TLS",[6,5,5,5,5,5]),("NNT",[8,10,10,10,10,10]),("CCS",[9,8,8,8,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[4,7,7,7,7,7])] 1.005
 --[("TLS",[6.0,5.0,5.0,5.0,5.0,5.0]),("CCS",[9.0,8.0,8.0,8.0,8.0,8.0]),("HHA",[5.0,4.0,4.0,4.0,4.0,4.0]),("JJY",[9.0,6.0,6.0,6.0,6.0,6.0])]
 
--- >>>
+
 
 
 
