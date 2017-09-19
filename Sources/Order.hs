@@ -20,9 +20,6 @@ makeOrders' (cash, holds) history a = case a of
          c:cs ->[Order (fst c) (quantity cash history)] ++ makeOrders' (cash, holds) history cs
 
 
---    case history of
---        []   -> []
---        (s, p):_ -> [Order s (floor (cash / 10 * head p))]
 
 average :: Stock -> [StockHistory] -> Price
 average s histories = (sum (take 5 (tail (snd getStock)))) / 5
@@ -47,8 +44,7 @@ belowAverage holds stocks
     where
         getdays= length(snd (head stocks))
 
---quantity :: Cash -> Stock -> [StockHistory] -> Quantity
---quantity cash stock stocks = floor(cash / (5 * (getStockPrice stock stocks)))
+
 quantity :: Cash -> [StockHistory] -> Quantity
 quantity cash stocks = floor(cash / (sum (getPriceSum (aboveAverage stocks 0.05))))
 
@@ -57,7 +53,7 @@ getPriceSum history = case (aboveAverage history 0.05) of
             []->[]
             x:xs-> [getStockPrice (fst x) history]++getPriceSum xs
 
---map getStockPrice (aboveAverage stocks 0.05)
+
 
 getStockPrice :: Stock -> [StockHistory] -> Price
 getStockPrice s histories = head $ snd getStock
