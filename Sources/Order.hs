@@ -3,6 +3,7 @@ module Order where
 import Types
 
 
+
 -- Change this implementation to your own non-trivial trading strategy.
 -- Do not modify the type signature of the function.
 --
@@ -13,10 +14,18 @@ import Types
 --
 -- >>> aboveAverage [("TLS",[6,5,5,5,5,5]),("NNT",[8,10,10,10,10,10]),("CCS",[9,8,8,8,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[4,7,7,7,7,7])] 1.005
 --[("TLS",[6.0,5.0,5.0,5.0,5.0,5.0]),("CCS",[9.0,8.0,8.0,8.0,8.0,8.0]),("HHA",[5.0,4.0,4.0,4.0,4.0,4.0]),("JJY",[9.0,6.0,6.0,6.0,6.0,6.0])]
-
-
-
-
+--
+-- >>> belowAverage [] [("TLS",[6,5,5,5,5,5]),("NNT",[8,10,10,10,10,10]),("CCS",[9,8,8,8,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[4,7,7,7,7,7])]
+-- []
+--
+-- >>> belowAverage [("TLS",18),("NNT",50),("CCS",88),("KKE",5),("GGA",100),("NNA",50)] [("TLS",[6,5,5,5,5,5]),("NNT",[8,10,10,10,10,10]),("CCS",[9,8,8,8,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[4,7,7,7,7,7])]
+--[("NNT",50),("KKE",5),("NNA",50)]
+--
+-- >>> makeOrders (100000,[("TLS",18),("NNT",50),("CCS",88),("KKE",5),("GGA",100),("NNA",50)]) [("TLS",[6.5,5,5.5,5,5.6,5.8]),("NNT",[8.3,10,9.4,8.6,8.5,8.8]),("CCS",[9.3,7.9,8.8,8.6,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[8,9,9,9,9,9]),("GGG",[9,10,10,10,10,10]),("YYY",[5,6.5,7.8,7.7,7.4,4.3]),("KKK",[4,7,7,7,7,7]),("NNG",[9,7.5,7,7,7,7])]
+--[Order "NNT" (-50),Order "KKE" (-5),Order "NNA" (-50),Order "TLS" 2577,Order "CCS" 2577,Order "HHA" 2577,Order "JJY" 2577,Order "NNG" 2577]
+--
+-- >>> makeOrders (5000000,[]) [("TLS",[6.5,5,5.5]),("NNT",[8.3,10,9.4]),("CCS",[9.3,7.9,8.8]),("HHA",[5,4,4]),("KKE",[6,7,7]),("GGA",[4,4,4]),("JJY",[9,6,6]),("NNA",[8,9,9]),("GGG",[9,10,10]),("YYY",[5,6.5,7.8]),("KKK",[4,7,7]),("NNG",[9,7.5,7])]
+--[]
 
 
 
@@ -25,8 +34,8 @@ makeOrders (cash, holds) history =
     case (belowAverage holds history) of
         x:xs -> [Order (fst x) (-(snd x))] ++ makeOrders (cash, xs) history
         []
-         |(aboveAverage history 1.005)==[]->[]
-         |otherwise -> makeOrders2 (cash, holds) history (aboveAverage history 1.005)
+         |(aboveAverage history 1.01)==[]->[]
+         |otherwise -> makeOrders2 (cash, holds) history (aboveAverage history 1.01)
 
 
 makeOrders2 :: Portfolio -> [StockHistory] ->[StockHistory]-> [Order]
@@ -62,10 +71,10 @@ belowAverage holds stocks
 
 
 quantity :: Cash -> [StockHistory] -> Quantity
-quantity cash stocks = floor(cash / (sum (getPriceSum (aboveAverage stocks 1.005))))
+quantity cash stocks = floor(cash / (sum (getPriceSum (aboveAverage stocks 1.01))))
 
 getPriceSum:: [StockHistory] -> [Price]
-getPriceSum history = case (aboveAverage history 1.005) of
+getPriceSum history = case (aboveAverage history 1.01) of
             []->[]
             x:xs-> [getStockPrice (fst x) history]++getPriceSum xs
 
