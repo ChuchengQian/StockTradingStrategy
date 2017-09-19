@@ -1,6 +1,21 @@
 module Order where
 
-import Types
+--import Types
+type Portfolio = (Cash, Holdings)
+
+type Holding  = (Stock, Quantity)
+type Holdings = [Holding]
+
+type Cash = Double
+
+type Price = Double
+type Quantity = Integer
+
+type Stock = String
+type StockHistory = (Stock, [Price])
+
+-- Positive quantity indicates long position.
+data Order = Order Stock Quantity deriving (Show)
 
 -- Change this implementation to your own non-trivial trading strategy.
 -- Do not modify the type signature of the function.
@@ -10,8 +25,10 @@ import Types
 -- >>> average "TLS" [("TLS",[6,5,5,5,5,5]),("NNT",[8,10,10,10,10,10]),("CCS",[9,8,8,8,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[4,7,7,7,7,7])]
 -- 5.0
 --
--- >>> aboveAverage [("TLS",[6,5,5,5,5,5]),("NNT",[8,10,10,10,10,10]),("CCS",[9,8,8,8,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[4,7,7,7,7,7])] 0.05
+-- >>> aboveAverage [("TLS",[6,5,5,5,5,5]),("NNT",[8,10,10,10,10,10]),("CCS",[9,8,8,8,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[4,7,7,7,7,7])] 1.005
+--[("TLS",[6.0,5.0,5.0,5.0,5.0,5.0]),("CCS",[9.0,8.0,8.0,8.0,8.0,8.0]),("HHA",[5.0,4.0,4.0,4.0,4.0,4.0]),("JJY",[9.0,6.0,6.0,6.0,6.0,6.0])]
 
+-- >>>
 
 
 
@@ -46,13 +63,7 @@ aboveAverage stocks rate
     | otherwise = take 5 (filter (\x -> getStockPrice (fst x) stocks > (average (fst x) stocks) * rate) stocks)
     where
         getdays= length(snd (head stocks))
---aboveAverage :: [StockHistory] -> Double -> [StockHistory]
---aboveAverage stocks rate
- --   | stocks == [] = []
- --   | getdays < 5 =[]
-   -- | otherwise = take 5 (filter (\x -> getStockPrice (fst x) stocks > (average (fst x) stocks) * rate) stocks)
-    --where
-     --   getdays= length(snd (head stocks))
+
 
 belowAverage :: Holdings -> [StockHistory] -> Holdings
 belowAverage holds stocks
