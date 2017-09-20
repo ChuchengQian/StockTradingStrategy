@@ -5,6 +5,15 @@ import Types
 -- Change this implementation to your own non-trivial trading strategy.
 -- Do not modify the type signature of the function.
 --
+-- | Stock Market
+--
+-- >>> average "TLS" [("TLS",[6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]),("NNT",[8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]),("CCS",[9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8]),("HHA",[5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]),("KKE",[6,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7]),("GGA",[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]),("NNA",[4,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7])]
+-- 5.0
+-- >>> aboveAverage [("TLS",[6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]),("NNT",[8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]),("CCS",[9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8]),("HHA",[5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]),("KKE",[6,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7]),("GGA",[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]),("NNA",[4,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7])]  1.05
+-- [("TLS",[6.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0]),("CCS",[9.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0,8.0]),("HHA",[5.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0]),("JJY",[9.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0,6.0])]
+--
+-- >>> belowAverage [("TLS",18),("NNT",50),("CCS",88),("KKE",5),("GGA",100),("NNA",50)] [("TLS",[6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]),("NNT",[8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]),("CCS",[9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8]),("HHA",[5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]),("KKE",[6,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7]),("GGA",[4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]),("NNA",[4,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7])]
+-- [("NNT",50),("KKE",5),("NNA",50)]
 
 
 --makeOrders obtains a list of buying and selling order
@@ -13,8 +22,8 @@ makeOrders (cash, holds) history =
     case (belowAverage holds history) of
         x:xs -> [Order (fst x) (-(snd x))] ++ makeOrders (cash, xs) history
         []
-         |(aboveAverage history 1.05)==[]->[]
-         |otherwise -> makeOrders2 (cash, holds) history (aboveAverage history 1.05)
+         |(aboveAverage history 0.05)==[]->[]
+         |otherwise -> makeOrders2 (cash, holds) history (aboveAverage history 0.05)
 
 --makeOrders2 obtains a list of buying orders by recursion and it supports the makeOrders function
 makeOrders2 :: Portfolio -> [StockHistory] ->[StockHistory]-> [Order]
@@ -52,11 +61,11 @@ belowAverage holds stocks
 
 --quantity calculates the amount of a stock one is going to buy
 quantity :: Cash -> [StockHistory] -> Quantity
-quantity cash stocks = floor(cash / (sum (getPriceSum (aboveAverage stocks 1.05))))
+quantity cash stocks = floor(cash / (sum (getPriceSum (aboveAverage stocks 0.05))))
 
 --getPriceSum obtains the list of the current price of the stocks one want to buy
 getPriceSum:: [StockHistory] -> [Price]
-getPriceSum history = case (aboveAverage history 1.05) of
+getPriceSum history = case (aboveAverage history 0.05) of
             []->[]
             x:xs-> [getStockPrice (fst x) history]++getPriceSum xs
 
