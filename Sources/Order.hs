@@ -1,21 +1,7 @@
 module Order where
 
---import Types
-type Portfolio = (Cash, Holdings)
+import Types
 
-type Holding  = (Stock, Quantity)
-type Holdings = [Holding]
-
-type Cash = Double
-
-type Price = Double
-type Quantity = Integer
-
-type Stock = String
-type StockHistory = (Stock, [Price])
-
--- Positive quantity indicates long position.
-data Order = Order Stock Quantity deriving (Show)
 -- Change this implementation to your own non-trivial trading strategy.
 -- Do not modify the type signature of the function.
 --
@@ -34,7 +20,7 @@ data Order = Order Stock Quantity deriving (Show)
 --[("NNT",50),("KKE",5),("NNA",50)]
 --
 -- >>> makeOrders (100000,[("TLS",18),("NNT",50),("CCS",88),("KKE",5),("GGA",100),("NNA",50)]) [("TLS",[6.5,5,5.5,5,5.6,5.8]),("NNT",[8.3,10,9.4,8.6,8.5,8.8]),("CCS",[9.3,7.9,8.8,8.6,8,8]),("HHA",[5,4,4,4,4,4]),("KKE",[6,7,7,7,7,7]),("GGA",[4,4,4,4,4,4]),("JJY",[9,6,6,6,6,6]),("NNA",[8,9,9,9,9,9]),("GGG",[9,10,10,10,10,10]),("YYY",[5,6.5,7.8,7.7,7.4,4.3]),("KKK",[4,7,7,7,7,7]),("NNG",[9,7.5,7,7,7,7])]
---[Order "NNT" (-50),Order "KKE" (-5),Order "NNA" (-50),Order "TLS" 2577,Order "CCS" 2577,Order "HHA" 2577,Order "JJY" 2577,Order "NNG" 2577]
+--[Order "NNT" (-50),Order "KKE" (-5),Order "NNA" (-50),Order "TLS" 2849,Order "NNT" 2849,Order "CCS" 2849,Order "HHA" 2849,Order "KKE" 2849]
 --
 -- >>> makeOrders (5000000,[]) [("TLS",[6.5,5,5.5]),("NNT",[8.3,10,9.4]),("CCS",[9.3,7.9,8.8]),("HHA",[5,4,4]),("KKE",[6,7,7]),("GGA",[4,4,4]),("JJY",[9,6,6]),("NNA",[8,9,9]),("GGG",[9,10,10]),("YYY",[5,6.5,7.8]),("KKK",[4,7,7]),("NNG",[9,7.5,7])]
 --[]
